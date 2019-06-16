@@ -89,10 +89,8 @@ class Rect{
     getTransformsForRect(r){
         const span = this.getSpanXYForRect(r);
         const transforms = [];
-        console.log(span.lambda, span.mu);
         for(let lambda = span.lambda.min; lambda <= span.lambda.max; lambda++){
             for(let mu = span.mu.min; mu <= span.mu.max; mu++){
-                console.log(lambda, mu);
                 transforms.push(new affine.translation(lambda*this.v.x + mu*this.w.x, lambda*this.v.y + mu*this.w.y));
             }
         }
