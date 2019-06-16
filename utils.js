@@ -7,7 +7,9 @@ const mark = (p, r = 3, clr = 'rgb(200,40,40)')=>{
     ctx.fill();
     ctx.closePath();
 };
-
+affine.identity = function(){
+    return new affine.translation(0, 0);
+};
 const getInverse = t=>{
     let det = getDet(t)
     if(det !== 0){
@@ -20,16 +22,28 @@ const getDet = t=>{
     return t.m00*t.m11 - t.m01*t.m10;
 };
 
-const compose = (a, b)=>{
+const _compose = (a, b)=>{
+    // a then b
     const c = affine.identity();
     c.rightComposeWith(b)
     c.rightComposeWith(a)
     return c
-}
-
-affine.identity = function(){
-    return new affine.translation(0, 0);
 };
+
+const compose = (...args)=>{
+    const ctx = this;
+    if(args.length <= 1){
+        throw "ONE!?!!?"
+    }
+    if(args.length === 2){
+        return _compose(args[0], args[1]);
+    }
+    const last = args.pop();
+    const firsts = compose.call(ctx, ...args);
+    return _compose(firsts, last);
+};
+
+const TEST = compose(new affine.translation(0, 0), new affine.translation(0, 0), new affine.translation(0, 0))
 
 const getReflection = (pt, angleRad)=>{
     const d = 50;
@@ -48,8 +62,6 @@ const getReflection = (pt, angleRad)=>{
     console.assert(Math.abs(img.y - pt.y) < EPS);
     console.assert(Math.abs(img2.x - pointOnLine.x) < EPS);
     console.assert(Math.abs(img2.y - pointOnLine.y) < EPS);
-    console.log('pt, angleRad', pt, angleRad);
-    console.log(pointOffLineTrans, pointOffLineDash);
     console.assert(Math.abs(pointOffLineTrans.x - pointOffLineDash.x) < EPS);
     console.assert(Math.abs(pointOffLineTrans.y - pointOffLineDash.y) < EPS);
     return composed;
@@ -136,7 +148,7 @@ const vectorsIntersect = (p, v, q, w)=>{
 const drawSegment=(segment, i)=>{
     ctx.beginPath();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = CLRS[i] || "red";
+    ctx.strokeStyle = "green";
     moveTo(ctx, segment.start)
     lineTo(ctx, segment.end)
     ctx.closePath();

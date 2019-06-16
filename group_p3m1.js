@@ -25,13 +25,13 @@ const groupP3M1 = {
         compose(t1, t0),
         t2,
         compose(t2, t3),
-        compose(compose(t2, t3), t1),
-        compose(compose(t2, t3), t4),
+        compose(t2, t3, t1),
+        compose(t2, t3, t4),
         t4,
         compose(t2, t4),
-        compose(compose(compose(t2, t3), t4), t5),
-        compose(compose(compose(compose(t2, t3), t4), t5), t6),
-        compose(compose(compose(t2, t3), t4), t6)
+        compose(t2, t3, t4, t5),
+        compose(t2, t3, t4, t5, t6),
+        compose(t2, t3, t4, t6)
     ]
 
 }
